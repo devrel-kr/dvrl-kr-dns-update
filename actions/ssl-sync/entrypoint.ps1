@@ -46,6 +46,9 @@ $result = Invoke-RestMethod -Method PUT `
     -Authentication Bearer `
     -Token $accessToken `
     -Body $certJson
+$resultJson = $result | ConvertTo-Json
+
+$resultJson
 
 $status = $result.properties.keyVaultSecretStatus
 
