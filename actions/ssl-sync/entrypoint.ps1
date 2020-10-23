@@ -31,7 +31,7 @@ $epoch = ([DateTimeOffset](Get-Date)).ToUnixTimeMilliseconds()
 $endpoint = "https://management.azure.com/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Web/certificates/{2}" -f $subscriptionId, $CertificateResourceGroupName, $CertificateName
 
 $cert = Invoke-RestMethod -Method GET `
-    -Uri "{0}?api-version={1}&_={2}" -f $endpoint, $ApiVersion, $epoch`
+    -Uri ("{0}?api-version={1}&_={2}" -f $endpoint, $ApiVersion, $epoch) `
     -ContentType "application/json" `
     -Authentication Bearer `
     -Token $accessToken
@@ -41,7 +41,7 @@ $certJson
 
 # Sync Certificate
 $result = Invoke-RestMethod -Method PUT `
-    -Uri "{0}?api-version={1}" -f $endpoint, $ApiVersion`
+    -Uri ("{0}?api-version={1}" -f $endpoint, $ApiVersion) `
     -ContentType "application/json" `
     -Authentication Bearer `
     -Token $accessToken `
