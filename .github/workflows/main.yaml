@@ -1,8 +1,8 @@
 name: Update DNS & SSL Certificate
 
 on:
-  # schedule:
-  # - cron: '0/30 * * * *'
+  schedule:
+  - cron: '0/30 * * * *'
   push:
     branches-ignore:
     - main
@@ -28,16 +28,16 @@ jobs:
         dnsZoneResourceGroup: ${{ secrets.RESOURCE_GROUP_NAME_ZONE }}
         dnsZoneName: ${{ secrets.RESOURCE_NAME_ZONE }}
 
-    # - name: Update SSL Certificate
-    #   if: steps.arecord.outputs.updated == 'true'
-    #   id: certificate
-    #   uses: ./actions/ssl-update
-    #   with:
-    #     apiEndpoint: ${{ secrets.SSL_RENEW_ENDPOINT }}
-    #     hostNames: ${{ secrets.SSL_HOST_NAMES }}
+    - name: Update SSL Certificate
+      if: steps.arecord.outputs.updated == 'true'
+      id: certificate
+      uses: ./actions/ssl-update
+      with:
+        apiEndpoint: ${{ secrets.SSL_RENEW_ENDPOINT }}
+        hostNames: ${{ secrets.SSL_HOST_NAMES }}
 
     - name: Send Email Notification
-      # if: steps.certificate.outputs.updated == 'true'
+      if: steps.certificate.outputs.updated == 'true'
       uses: dawidd6/action-send-mail@v2
       with:
         server_address: ${{ secrets.MAIL_SMTP_SERVER }}
