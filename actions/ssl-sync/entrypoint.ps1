@@ -36,7 +36,7 @@ $cert = Invoke-RestMethod -Method GET `
     -Authentication Bearer `
     -Token $accessToken
 
-# $certJson = $cert | ConvertTo-Json
+$certJson = $cert | ConvertTo-Json
 # $certJson
 
 # Sync Certificate
