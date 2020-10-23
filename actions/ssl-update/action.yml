@@ -1,0 +1,28 @@
+name: Update SSL Certificate for Azure App Service
+author: DevRel Korea
+description: Update Let's Encrypt issued SSL Certificate to Azure App Service instance
+
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  apiEndpoint:
+    description: API endpoint to update SSL certificate.
+    required: true
+  hostNames:
+    description: List of host names delimited by a comma.
+    required: true
+
+outputs:
+  updated:
+    description: List of host names delimited by a comma.
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+  - -ApiEndpoint
+  - ${{ inputs.apiEndpoint }}
+  - -HostNames
+  - ${{ inputs.hostNames }}

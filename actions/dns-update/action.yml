@@ -1,0 +1,38 @@
+name: Azure DNS Update for Azure App Service
+author: DevRel Korea
+description: Update A record on Azure DNS for Azure App Service instance
+
+branding:
+  icon: repeat
+  color: blue
+
+inputs:
+  appServiceResourceGroup:
+    description: Resource group name of the Azure App Service instance.
+    required: true
+  appName:
+    description: Name of the Azure App Service instance.
+    required: true
+  dnsZoneResourceGroup:
+    description: Resource group name of the Azure DNS Zone instance.
+    required: true
+  dnsZoneName:
+    description: Name of the Azure DNS Zone instance.
+    required: true
+
+outputs:
+  updated:
+    description: Value indicating whether the DNS A record has been updated or not.
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+  - -AppResourceGroupName
+  - ${{ inputs.appServiceResourceGroup }}
+  - -AppName
+  - ${{ inputs.appName }}
+  - -ZoneResourceGroupName
+  - ${{ inputs.dnsZoneResourceGroup }}
+  - -ZoneName
+  - ${{ inputs.dnsZoneName }}
