@@ -51,7 +51,7 @@ $result = Invoke-RestMethod -Method PUT `
 # $resultJson
 
 $updated = $cert.properties.thumbprint -ne $result.properties.thumbprint
-$updated
+# Write-Output "Updated: $updated"
 
 # Set Output
 Write-Output "::set-output name=updated::$updated"
