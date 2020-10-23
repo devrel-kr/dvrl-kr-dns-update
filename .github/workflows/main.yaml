@@ -1,0 +1,51 @@
+name: Update DNS & SSL Certificate
+
+on:
+  # schedule:
+  # - cron: '0/30 * * * *'
+  push:
+    branches-ignore:
+    - main
+
+jobs:
+  update_dns_and_ssl_certificate:
+    name: 'PROD: Update DNS and SSL Certificate'
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Update A record
+      id: arecord
+      uses: ./actions/dns-update
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        appServiceResourceGroup: ${{ secrets.RESOURCE_GROUP_NAME_APP }}
+        appName: ${{ secrets.RESOURCE_NAME_FUNCTIONAPP }}
+        dnsZoneResourceGroup: ${{ secrets.RESOURCE_GROUP_NAME_ZONE }}
+        dnsZoneName: ${{ secrets.RESOURCE_NAME_ZONE }}
+
+    # - name: Update SSL Certificate
+    #   if: steps.arecord.outputs.updated == 'true'
+    #   id: certificate
+    #   uses: ./actions/ssl-update
+    #   with:
+    #     apiEndpoint: ${{ secrets.SSL_RENEW_ENDPOINT }}
+    #     hostNames: ${{ secrets.SSL_HOST_NAMES }}
+
+    - name: Send Email Notification
+      # if: steps.certificate.outputs.updated == 'true'
+      uses: dawidd6/action-send-mail@v2
+      with:
+        server_address: ${{ secrets.MAIL_SMTP_SERVER }}
+        server_port: ${{ secrets.MAIL_SMTP_PORT }}
+        username: ${{ secrets.MAIL_SMTP_USERNAME }}
+        password: ${{ secrets.MAIL_SMTP_PASSWORD }}
+
+        subject: '[${{ secrets.SSL_HOST_NAMES }}] SSL Certificate Updated'
+        body: 'SSL certificate for ${{ secrets.SSL_HOST_NAMES }} has been updated'
+        to: ${{ secrets.MAIL_RECIPIENTS }}
+        from: ${{ secrets.MAIL_SENDER }}
