@@ -36,8 +36,18 @@ jobs:
         apiEndpoint: ${{ secrets.SSL_RENEW_ENDPOINT }}
         hostNames: ${{ secrets.SSL_HOST_NAMES }}
 
-    - name: Send Email Notification
+    - name: Sync SSL Certificate
       if: steps.certificate.outputs.updated == 'true'
+      id: sync
+      uses: ./actions/ssl-update
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        certificateResourceGroup: ${{ secrets.RESOURCE_GROUP_NAME_CERTIFICATE }}
+        certificateName: ${{ secrets.RESOURCE_NAME_CERTIFICATE }}
+
+    - name: Send Email Notification
+      if: steps.sync.outputs.updated == 'true'
       uses: dawidd6/action-send-mail@v2
       with:
         server_address: ${{ secrets.MAIL_SMTP_SERVER }}

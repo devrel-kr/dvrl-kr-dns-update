@@ -1,0 +1,34 @@
+name: SSL Certificate Sync
+author: DevRel Korea
+description: Sync SSL Certificate from Azure Key Vault instance
+
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  certificateResourceGroup:
+    description: Resource group name of the Azure Certificate instance.
+    required: true
+  certificateName:
+    description: Name of the Azure Certificate instance.
+    required: true
+  apiVersion:
+    description: API version for certificate sync.
+    required: false
+    default: '2018-11-01'
+
+outputs:
+  updated:
+    description: Value indicating whether the certificate has been sync'd or not.
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+  - -CertificateResourceGroupName
+  - ${{ inputs.certificateResourceGroup }}
+  - -CertificateName
+  - ${{ inputs.certificateName }}
+  - -ApiVersion
+  - ${{ inputs.apiVersion }}
