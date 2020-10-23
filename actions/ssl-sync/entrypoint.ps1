@@ -35,9 +35,9 @@ $cert = Invoke-RestMethod -Method GET `
     -ContentType "application/json" `
     -Authentication Bearer `
     -Token $accessToken
-$certJson = $cert | ConvertTo-Json
 
-$certJson
+# $certJson = $cert | ConvertTo-Json
+# $certJson
 
 # Sync Certificate
 $result = Invoke-RestMethod -Method PUT `
@@ -46,15 +46,12 @@ $result = Invoke-RestMethod -Method PUT `
     -Authentication Bearer `
     -Token $accessToken `
     -Body $certJson
-$resultJson = $result | ConvertTo-Json
 
-$resultJson
+# $resultJson = $result | ConvertTo-Json
+# $resultJson
 
-$status = $result.properties.keyVaultSecretStatus
+$updated = $cert.properties.thumbprint -ne $result.properties.thumbprint
+$updated
 
 # Set Output
-if ($status.ToLower() -eq "succeeded") {
-    Write-Output "::set-output name=updated::$true"
-} else {
-    Write-Output "::set-output name=updated::$false"
-}
+Write-Output "::set-output name=updated::$updated"
