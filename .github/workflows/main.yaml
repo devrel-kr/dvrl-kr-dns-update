@@ -26,6 +26,7 @@ jobs:
         certificateResourceGroup: ${{ secrets.RESOURCE_GROUP_NAME_CERTIFICATE }}
         certificateName: ${{ secrets.RESOURCE_NAME_CERTIFICATE }}
 
+  
     # - name: Update A record
     #   id: arecord
     #   uses: ./actions/dns-update
